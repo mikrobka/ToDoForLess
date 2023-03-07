@@ -6,6 +6,7 @@ import {totalmem} from "os";
 import todoList from "./TodoList";
 import {Simulate} from "react-dom/test-utils";
 import copy = Simulate.copy;
+import {AddItemForm} from "./AdditemForm";
 
 
 // CRUD
@@ -40,8 +41,6 @@ function App(): JSX.Element {
     })
 
     //BLL:
-
-
     const removeTask = (taskId: string, todoListId: string) => {
 
         setTasks({...tasks, [todoListId]: tasks[todoListId].filter(t => t.id !== taskId)})
@@ -58,14 +57,17 @@ function App(): JSX.Element {
 
     }
     const changeTaskStatus = (taskId: string, newIsDone: boolean, todoListId: string) => {
-        const tasksForUpdate: Array<TaskType> = tasks[todoListId]
         setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, isDone: newIsDone} : t)})
     }
-
+    const changeTasksTitle = (taskId: string, newTitle: string, todoListId: string) => {
+        setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, title: newTitle} : t)})
+    }
+    const changeTodoListTitle = (title: string, todoListId: string) => {
+        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, title: title} : tl))
+    }
     const changeTodoListFilter = (filter: FilterValuesType, todoListId: string) => {
         setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, filter: filter} : tl))
     }
-
     const removeTodoList = (todoListId: string) => {
         setTodoLists(todoLists.filter(tl => tl.id !== todoListId))
         const copyTasks = {...tasks}
@@ -73,8 +75,16 @@ function App(): JSX.Element {
         setTasks(copyTasks)
 
     }
-
-
+    const addTodoList = (title:string) => {
+        const newTodoListId = v1()
+        const newTodoList: TodoListType ={
+            id:newTodoListId,
+            title:title,
+            filter:"all"
+        }
+        setTodoLists([...todoLists,newTodoList])
+        setTasks({...tasks,[newTodoListId]: []})
+    }
     const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
         switch (filter) {
             case "active":
@@ -87,10 +97,9 @@ function App(): JSX.Element {
     }
 
 
-
-    const todoListsCopmonents = todoLists.map(tl => {
+    const todoListsComponents = todoLists.map(tl => {
         const filteredTasks: Array<TaskType> = getFilteredTasks(tasks[tl.id], tl.filter)
-        return(
+        return (
             <TodoList
                 key={tl.id}
                 todoListId={tl.id}
@@ -102,6 +111,8 @@ function App(): JSX.Element {
                 addTask={addTask}
                 changeTaskStatus={changeTaskStatus}
                 removeTodoList={removeTodoList}
+                changeTodoListTitle={changeTodoListTitle}
+                changeTasksTitle={changeTasksTitle}
             />
         )
     })
@@ -109,11 +120,11 @@ function App(): JSX.Element {
     //UI:
     return (
         <div className="App">
-            {todoListsCopmonents}
+            <AddItemForm maxLengthUserMessage={10} addNewItem={addTodoList}/>
+            {todoListsComponents}
         </div>
     );
 }
-
 
 
 export default App;

@@ -1,45 +1,53 @@
 .App {
-  padding: 30px;
-  display: flex;
+    padding: 30px;
+    display: flex;
 }
 
 .App > div {
-  margin-right: 50px;
+    margin-right: 25px;
 }
+
 .todolist {
-  border: 2px solid hotpink;
-  border-radius:  5px;
-  padding: 20px;
-  background-color:#f2f2f2;
+    border: 2px solid hotpink;
+    height:max-content;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f2f2f2;
 }
 
 .task {
-  font-weight: bold;
+    font-weight: bold;
 }
+
 .task-done {
-  text-decoration: line-through;
-  opacity: 0.5;
+    text-decoration: line-through;
+    opacity: 0.5;
 }
+
 .active-filter-btn {
-  background-color: hotpink;
-  font-weight: bold;
-  color:  white;
-  border: 2px solid hotpink;
-  border-radius: 3px;
+    background-color: hotpink;
+    font-weight: bold;
+    color: white;
+    border: 2px solid hotpink;
+    border-radius: 3px;
 }
+
 .filter-btn {
-  background-color: cornflowerblue;
-  font-weight: bold;
-  color:  white;
-  border: 2px solid cornflowerblue;
-  border-radius: 3px;
+    background-color: cornflowerblue;
+    font-weight: bold;
+    color: white;
+    border: 2px solid cornflowerblue;
+    border-radius: 3px;
 }
+
 .filter-btn-container {
-  display: flex;
-  justify-content: space-between
+    display: flex;
+    justify-content: space-between
 }
+
 .input-error {
-  border: 2px solid hotpink;
-  outline: none;
+    border: 2px solid hotpink;
+    outline: none;
 }
+
 
