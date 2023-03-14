@@ -1,18 +1,16 @@
-.App {
-    padding: 30px;
-    display: flex;
-}
+/*.App {*/
+/*    padding: 30px;*/
+/*    display: flex;*/
+/*}*/
 
-.App > div {
-    margin-right: 25px;
-}
+/*.App > div {*/
+/*    margin-right: 50px;*/
+/*}*/
 
 .todolist {
-    border: 2px solid hotpink;
-    height:max-content;
-    border-radius: 5px;
-    padding: 20px;
-    background-color: #f2f2f2;
+    width: 250px;
+    height:100%;
+    /*background-color: rgba(63, 60, 60, 0.66);*/
 }
 
 .task {
@@ -42,12 +40,14 @@
 
 .filter-btn-container {
     display: flex;
-    justify-content: space-between
+    justify-content: space-between;
+
 }
 
 .input-error {
     border: 2px solid hotpink;
     outline: none;
 }
+
 
 

@@ -1,13 +1,15 @@
 import React, {ChangeEvent, FC} from 'react';
 import todoList, {TaskType} from "./TodoList";
 import EditableSpan from "./EditableSpan";
+import {Button, Checkbox, IconButton, List, ListItem} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type TasksListPropsType = {
     todoListId: string
     tasks: TaskType[]
     removeTask: (taskId: string, todoListId: string) => void
     changeTaskStatus: (taskId: string, isDone: boolean, todoListId: string) => void
-    changeTasksTitle : (taskId: string, newTitle: string, todoListId: string) =>void
+    changeTasksTitle: (taskId: string, newTitle: string, todoListId: string) => void
 }
 
 const TasksList: FC<TasksListPropsType> = (props): JSX.Element => {
@@ -17,26 +19,28 @@ const TasksList: FC<TasksListPropsType> = (props): JSX.Element => {
                 const taskClasses = task.isDone ? "task task-done" : "task"
                 const removeTaskHandler = () => props.removeTask(task.id, props.todoListId)
                 const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(task.id, e.currentTarget.checked, props.todoListId)
-                const changeTaskTitleHandler = (title:string) =>{
-                    props.changeTasksTitle(task.id,title,props.todoListId)
+                const changeTaskTitleHandler = (title: string) => {
+                    props.changeTasksTitle(task.id, title, props.todoListId)
                 }
                 return (
-                    <li key={task.id}>
-                        <input
-                            type="checkbox"
+                    <ListItem key={task.id} disablePadding={false} disableGutters={true}
+                              secondaryAction={<IconButton aria-label="delete" onClick={removeTaskHandler}>
+                                  <DeleteIcon/>
+                              </IconButton>}
+                    >
+                        <Checkbox
                             checked={task.isDone}
-                            onChange={changeTaskStatusHandler}
-                        />
+                            onChange={changeTaskStatusHandler} defaultChecked size={"small"} sx={{margin: -1}}/>
                         <EditableSpan title={task.title} spanClasses={taskClasses} changeTitle={changeTaskTitleHandler}/>
-                        <button onClick={removeTaskHandler}>x</button>
-                    </li>
+
+                    </ListItem>
                 )
             })
             : <span>Your taskslist is empty</span>
     return (
-        <ul>
+        <List>
             {tasksItems}
-        </ul>
+        </List>
     );
 };
 
