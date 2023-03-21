@@ -3,16 +3,31 @@ import './App.css';
 import TodoList, {TaskType} from "./TodoList";
 import {v1} from "uuid";
 import {AddItemForm} from "./AdditemForm";
-import {AppBar, Button, IconButton, Typography, Toolbar, Container, Grid, Paper, ThemeProvider, CssBaseline, createTheme, Switch, FormGroup, FormControlLabel} from '@mui/material';
+import {
+    AppBar,
+    Button,
+    IconButton,
+    Typography,
+    Toolbar,
+    Container,
+    Grid,
+    Paper,
+    ThemeProvider,
+    CssBaseline,
+    createTheme,
+    Switch,
+    FormGroup,
+    FormControlLabel
+} from '@mui/material';
 import {Menu} from '@mui/icons-material';
-import { lightGreen, orange } from '@mui/material/colors';
+import {lightGreen, orange} from '@mui/material/colors';
 
 
 // CRUD
 // R - filter, sort, search
 
 export type FilterValuesType = "all" | "active" | "completed"
-type TodoListType = {
+export type TodoListType = {
     id: string
     title: string
     filter: FilterValuesType
@@ -39,7 +54,7 @@ function App(): JSX.Element {
             {id: v1(), title: "Candy", isDone: false},]
     })
 
-    const [isDarkMode,setIsDarkMode] = useState<boolean>(true)
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(true)
 
     //BLL:
     const removeTask = (taskId: string, todoListId: string) => {
@@ -61,7 +76,10 @@ function App(): JSX.Element {
         setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, isDone: newIsDone} : t)})
     }
     const changeTasksTitle = (taskId: string, newTitle: string, todoListId: string) => {
-        setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, title: newTitle} : t)})
+        setTasks({
+            ...tasks,
+            [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, title: newTitle.trim()} : t)
+        })
     }
     const changeTodoListTitle = (title: string, todoListId: string) => {
         setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, title: title} : tl))
@@ -127,10 +145,10 @@ function App(): JSX.Element {
     //UI:
     const mode = isDarkMode ? "dark" : "light"
     const newThem = createTheme({
-        palette:{
-            mode:mode,
-            primary:lightGreen,
-            secondary:  orange,
+        palette: {
+            mode: mode,
+            primary: lightGreen,
+            secondary: orange,
         }
     })
     return (
@@ -147,13 +165,17 @@ function App(): JSX.Element {
                             sx={{mr: 2}}
                         >
                             <Menu/>
-                            <FormGroup>
-                                <FormControlLabel control={<Switch onClick={() => (setIsDarkMode(!isDarkMode))} defaultChecked />} label={isDarkMode ? "Dark Mode" : "Light Mode"} />
-                            </FormGroup>
+
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                             TodoLists
                         </Typography>
+                        <FormGroup>
+                            <FormControlLabel control={
+                                <Switch onClick={() => (setIsDarkMode(!isDarkMode))} defaultChecked/>}
+                                              label={isDarkMode ? "Dark Mode" : "Light Mode"
+                                              }/>
+                        </FormGroup>
                         <Button color="inherit">Login</Button>
                     </Toolbar>
                 </AppBar>

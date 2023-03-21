@@ -1,7 +1,7 @@
 import IconButton from '@mui/material/IconButton/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import React, {ChangeEvent, FC, KeyboardEvent, useState} from 'react';
-import { Input, TextField } from '@mui/material';
+import {TextField } from '@mui/material';
 
 type AddItemFormType = {
     maxLengthUserMessage: number
