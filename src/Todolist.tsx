@@ -1,23 +1,16 @@
-import React, {ChangeEvent, FC, useState, KeyboardEvent} from 'react';
-import TasksList from "./TasksList";
-import {FilterValuesType} from "./App";
+import React, { FC} from 'react';
 import {AddItemForm} from "./AdditemForm";
 import EditableSpan from "./EditableSpan";
 import {Button, IconButton, Typography} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {TodoListType} from "./App";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./state/store";
+import {ChangeTodoListFilterAC, ChangeTodoListTitleAC, RemoveTodoListAC} from "./state/todolists-reducer";
+import TasksListWithRedux from "./TasksListWithRedux";
 
 type TodoListPropsType = {
-    todoListId: string
-    title: string
-    filter: FilterValuesType
-    tasks: TaskType[]
-    changeTodoListFilter: (filter: FilterValuesType, todoListId: string) => void
-    removeTask: (taskId: string, todoListId: string) => void
-    addTask: (title: string, todoListId: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean, todoListId: string) => void
-    removeTodoList: (todoListId: string) => void
-    changeTasksTitle: (taskId: string, newTitle: string, todoListId: string) => void
-    changeTodoListTitle: (title: string, todoListId: string) => void
+    todoList: TodoListType
 }
 
 export type TaskType = {
@@ -26,35 +19,38 @@ export type TaskType = {
     isDone: boolean
 }
 
-const TodoList: FC<TodoListPropsType> = (props) => {
-    const addTask = (title: string) => {
-        props.addTask(title, props.todoListId)
-    }
-    const handlerCreator = (filter: FilterValuesType): () => void => (): void => props.changeTodoListFilter(filter, props.todoListId)
+const TodoList: FC<TodoListPropsType> = ({todoList}) => {
+    const {id, title, filter} = todoList
+    let tasks = useSelector<AppRootStateType, Array<TaskType>>((state) => state.tasks[id])
+    const dispatch = useDispatch()
+
+    const onAllClickHandler = () => dispatch(ChangeTodoListFilterAC("all", id))
+    const onActiveClickHandler = () => dispatch(ChangeTodoListFilterAC("active", id))
+    const onCompleteClickHandler = () => dispatch(ChangeTodoListFilterAC("completed", id))
     const removeTodoList = () => {
-        props.removeTodoList(props.todoListId)
+        const action = RemoveTodoListAC(id)
+        dispatch(action)
     }
     const changeTodoListTitle = (title: string) => {
-        props.changeTodoListTitle(title, props.todoListId)
+        let action = ChangeTodoListTitleAC(title, id)
+        dispatch(action)
     }
 
     return (
         <div className={"todolist"}>
             <div className={"todolist-title"}>
-                <Typography variant={"h4"} align={"center"}><EditableSpan title={props.title} changeTitle={changeTodoListTitle}/></Typography>
+                <Typography variant={"h4"} align={"center"}><EditableSpan title={title}
+                                                                          changeTitle={changeTodoListTitle}/></Typography>
                 <IconButton aria-label="delete" onClick={removeTodoList}>
                     <DeleteIcon/>
                 </IconButton>
             </div>
 
             <div>
-                <AddItemForm maxLengthUserMessage={15} addNewItem={addTask}/>
-                <TasksList
-                    todoListId={props.todoListId}
-                    tasks={props.tasks}
-                    removeTask={props.removeTask}
-                    changeTaskStatus={props.changeTaskStatus}
-                    changeTasksTitle={props.changeTasksTitle}
+                <AddItemForm maxLengthUserMessage={15} />
+                <TasksListWithRedux
+                    todoListId={id}
+                    tasks={tasks}
                 />
             </div>
 
@@ -62,22 +58,22 @@ const TodoList: FC<TodoListPropsType> = (props) => {
                 <Button
                     size="small"
                     variant="outlined"
-                    color={props.filter === "all" ? "secondary" : "primary"}
-                    onClick={handlerCreator("all")}>
+                    color={filter === "all" ? "secondary" : "primary"}
+                    onClick={onAllClickHandler}>
                     All
                 </Button>
                 <Button
                     size="small"
                     variant="outlined"
-                    color={props.filter === "active" ? "secondary" : "primary"}
-                    onClick={handlerCreator("active")}>
+                    color={filter === "active" ? "secondary" : "primary"}
+                    onClick={onActiveClickHandler}>
                     Active
                 </Button>
                 <Button
                     size="small"
                     variant="outlined"
-                    color={props.filter === "completed" ? "secondary" : "primary"}
-                    onClick={handlerCreator("completed")}>
+                    color={filter === "completed" ? "secondary" : "primary"}
+                    onClick={onCompleteClickHandler}>
                     Completed
                 </Button>
             </div>

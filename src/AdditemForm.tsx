@@ -2,17 +2,17 @@ import IconButton from '@mui/material/IconButton/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import React, {ChangeEvent, FC, KeyboardEvent, useState} from 'react';
 import {TextField } from '@mui/material';
+import {useDispatch} from "react-redux";
+import {AddTodoListAC} from "./state/todolists-reducer";
 
 type AddItemFormType = {
     maxLengthUserMessage: number
-    addNewItem: (title: string) => void
+
 }
 
-export const AddItemForm: FC<AddItemFormType> = ({
-                                                     maxLengthUserMessage,
-                                                     addNewItem
+export const AddItemForm: FC<AddItemFormType> = ({maxLengthUserMessage}) => {
 
-                                                 }) => {
+    const dispatch = useDispatch()
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
     const changeLocalTitle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +22,7 @@ export const AddItemForm: FC<AddItemFormType> = ({
     const addItem = () => {
         const trimmedTitle = title.trim()
         if (trimmedTitle) {
-            addNewItem(trimmedTitle)
+            dispatch(AddTodoListAC(trimmedTitle))
         } else {
             setError(true)
         }
@@ -31,10 +31,10 @@ export const AddItemForm: FC<AddItemFormType> = ({
     const onKeyDownAddTask = (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && addItem()
 
 
-    const userErrorMessage = error && <div style={{color: "hotpink"}}>Title is required!</div> // title is missing
+    // const userErrorMessage = error && <div style={{color: "hotpink"}}>Title is required!</div> // title is missing
     const isUserMessageToLong: boolean = title.length > maxLengthUserMessage // title so long
     const isAddBtnDisabled = !title.length || isUserMessageToLong || error//disable button
-    const userMaxLengthMessage = isUserMessageToLong && <div style={{color: "hotpink"}}>Task title is to long!</div> //title so long
+    // const userMaxLengthMessage = isUserMessageToLong && <div style={{color: "hotpink"}}>Task title is to long!</div> //title so long
     const inputErrorClasses = error || isUserMessageToLong ? "input-error" : "" // error class
     const onKeyDownHandler = isAddBtnDisabled ? undefined : onKeyDownAddTask
     const isInputShowError = isUserMessageToLong || error
